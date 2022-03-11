@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="10cc5d3d-203c-478c-ae34-b67086dbf6d3" >
 		<http:listener-connection host="0.0.0.0" port="${http.port}" />
 	</http:listener-config>
@@ -14,5 +15,26 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<flow name="demo-projectFlow" doc:id="74616239-01a5-4105-90b7-225e76f9cfbe" >
 		<http:listener doc:name="Listener" doc:id="c99a87b8-44d9-4426-8a52-ea52f0bc9c0a" config-ref="HTTP_Listener_config" path="/"/>
 		<http:request method="GET" doc:name="Request" doc:id="6cc3abae-8229-461b-8a9b-353edeb122da" config-ref="HTTP_Request_configuration" path="/users"/>
+		<logger level="INFO" doc:name="Logger" doc:id="cc72dd20-2755-4acd-ab19-d032b9cfb4cf" message="#[payload]"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="56bb698d-3abc-4578-8a94-1fd7984b19df">
+			<route>
+				<logger level="INFO" doc:name="Logger" doc:id="8ad11576-a3e3-4279-8877-413ce6b75eab" message="two" />
+			</route>
+			<route>
+				<logger level="INFO" doc:name="Logger" doc:id="ec32a876-52d3-4431-af0a-2a2a101a9055" message="one" />
+				<set-payload value="from second path" doc:name="Set Payload" doc:id="33e2ab1a-19b0-46bc-a720-c12152f773bb" />
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="7a0b1d2e-cbf7-471b-bcea-ef96ead2b817">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	users: payload."0".payload,
+	second: payload."1".payload
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
 	</flow>
 </mule>
