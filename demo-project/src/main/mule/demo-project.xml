@@ -8,8 +8,11 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		<http:listener-connection host="0.0.0.0" port="${http.port}" />
 	</http:listener-config>
 	<configuration-properties doc:name="Configuration properties" doc:id="edd2e87f-3e79-409a-8af3-95906e6fa1a6" file="props.yaml" />
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="06d5f289-b529-498a-89de-ab19100da538" >
+		<http:request-connection host="jsonplaceholder.typicode.com" />
+	</http:request-config>
 	<flow name="demo-projectFlow" doc:id="74616239-01a5-4105-90b7-225e76f9cfbe" >
 		<http:listener doc:name="Listener" doc:id="c99a87b8-44d9-4426-8a52-ea52f0bc9c0a" config-ref="HTTP_Listener_config" path="/"/>
-		<set-payload value="Hello Sriram , Welcome to Mule" doc:name="Set Payload" doc:id="b45dd1d8-7e27-4fb4-9fd9-f985d71c92ea" />
+		<http:request method="GET" doc:name="Request" doc:id="6cc3abae-8229-461b-8a9b-353edeb122da" config-ref="HTTP_Request_configuration" path="/users"/>
 	</flow>
 </mule>
