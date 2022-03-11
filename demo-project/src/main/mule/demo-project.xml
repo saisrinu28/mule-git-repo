@@ -15,6 +15,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	<flow name="demo-projectFlow" doc:id="74616239-01a5-4105-90b7-225e76f9cfbe" >
 		<http:listener doc:name="Listener" doc:id="c99a87b8-44d9-4426-8a52-ea52f0bc9c0a" config-ref="HTTP_Listener_config" path="/"/>
 		<http:request method="GET" doc:name="Request" doc:id="6cc3abae-8229-461b-8a9b-353edeb122da" config-ref="HTTP_Request_configuration" path="/users"/>
+
 		<logger level="INFO" doc:name="Logger" doc:id="cc72dd20-2755-4acd-ab19-d032b9cfb4cf" message="#[payload]"/>
 		<scatter-gather doc:name="Scatter-Gather" doc:id="56bb698d-3abc-4578-8a94-1fd7984b19df">
 			<route>
@@ -36,5 +37,6 @@ output application/json
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
+
 	</flow>
 </mule>
